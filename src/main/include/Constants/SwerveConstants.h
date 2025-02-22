@@ -143,10 +143,10 @@ inline const str::swerve::ModulePhysicalCharacteristics PHY_CHAR{
 
 inline constexpr units::meters_per_second_t DRIVE_MAX_SPEED =
     ((DRIVE_MOTOR.freeSpeed / 1_rad) / DRIVE_GEARING) * WHEEL_RADIUS;
-inline constexpr units::radians_per_second_t MAX_ROT_SPEED = 540_deg_per_s;
+inline constexpr units::radians_per_second_t MAX_ROT_SPEED = 400_deg_per_s; // Was 540
 inline constexpr units::radians_per_second_squared_t MAX_ROT_ACCEL =
-    720_deg_per_s_sq;
-inline constexpr units::meters_per_second_squared_t MAX_ACCEL = 10_fps_sq;
+    360_deg_per_s_sq; //Was 720
+inline constexpr units::meters_per_second_squared_t MAX_ACCEL = 5_fps_sq; // Was 10
 
 }  // namespace physical
 

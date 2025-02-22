@@ -21,7 +21,9 @@ void CmdClawOuttake::Initialize()
 
 void CmdClawOuttake::Execute() 
 {
-  robotcontainer.m_claw.SetClawPower(m_power);
+  robotcontainer.m_claw.SetClawPower(-1);
+
+  
 }
 
 void CmdClawOuttake::End(bool interrupted) 

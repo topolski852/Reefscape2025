@@ -25,17 +25,15 @@ class CmdClimberActivate
 
   bool IsFinished() override;
 
-  // enum class stateClimber
-  // {
-  //   RunClimberFull,
-  //   Sensor1,
-  //   RunClimberActivate,
-  //   NotDetected,
-  //   StopMotor,
-  //   EndState,
-  // };
+  enum class stateClimber
+  {
+    RunClimberFull,
+    Sensor1,
+    StopMotor,
+    EndState,
+  };
 
-  // stateClimber currentState = stateClimber::RunClimberFull;
+  stateClimber currentState = stateClimber::RunClimberFull;
 
   private:
 

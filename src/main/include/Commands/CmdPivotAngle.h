@@ -7,7 +7,7 @@ class CmdPivotAngle
     : public frc2::CommandHelper<frc2::Command, CmdPivotAngle> {
  public:
  
-  CmdPivotAngle(double power , float angle) ;
+  CmdPivotAngle(float angle) ;
 
   void Initialize() override;
 
@@ -18,6 +18,5 @@ class CmdPivotAngle
   bool IsFinished() override;
 
   private:
-  double m_power;
   double m_angle;
 };

@@ -50,6 +50,9 @@ class Elevator : public frc2::SubsystemBase {
   void SetElevatorPower(double power);
   void SetElevatorPosition(float position);
 
+  void SetElevatorCoast();
+  void SetElvevatorBrake();
+
   void ResetEncoderValue();
 
   bool AtSetpoint();

@@ -18,6 +18,8 @@ class Climber : public frc2::SubsystemBase
     
     Climber();
 
+    void Periodic() override;
+
     bool IsClimberActivated(void);
 
     void SetClimbPower(double power);

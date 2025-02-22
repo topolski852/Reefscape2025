@@ -11,12 +11,6 @@ Claw::Claw()
     clawconfig
         .Inverted(false)
         .SetIdleMode(SparkMaxConfig::IdleMode::kCoast);
-    clawconfig.encoder
-        .PositionConversionFactor(1000)
-        .VelocityConversionFactor(1000);
-    clawconfig.closedLoop
-        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-        .Pid(1.0, 0.0, 0.0); 
         
     m_claw.Configure(clawconfig,
      SparkMax::ResetMode::kResetSafeParameters,
@@ -25,20 +19,25 @@ Claw::Claw()
     SparkMaxConfig pivotconfig{};
     pivotconfig
         .Inverted(false)
-        .SetIdleMode(SparkMaxConfig::IdleMode::kCoast);
+        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
+        .SmartCurrentLimit(50)
+        .OpenLoopRampRate(0.3);
     pivotconfig.encoder
-        .PositionConversionFactor(1000)
-        .VelocityConversionFactor(1000);
+        .PositionConversionFactor(100)
+        .VelocityConversionFactor(100);
     pivotconfig.closedLoop
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-        .Pid(1.0, 0.0, 0.0); //To Be Tuned      
+        .Pid(0.5, 0.0, 0.0) //Tuning 
+        .OutputRange(-0.09, 0.1);     
+    pivotconfig.closedLoop.maxMotion
+        .MaxVelocity(100)
+        .MaxAcceleration(150)
+        .AllowedClosedLoopError(0.1);
 
     m_pivot.Configure(pivotconfig,
      SparkMax::ResetMode::kResetSafeParameters,
      SparkMax::PersistMode::kPersistParameters);
 
-    frc::SmartDashboard::PutNumber("Claw Current", GetAlgaeCurrent());
-    frc::SmartDashboard::PutNumber("Claw Temp", GetAlgaeTemp());
 
     frc::SmartDashboard::PutNumber("Pivot Current", GetPivotCurrent());
     frc::SmartDashboard::PutNumber("Pivot Temp", GetPivotTemp());
@@ -54,6 +53,8 @@ void Claw::Periodic()
     frc::SmartDashboard::PutBoolean("Algae Photo Eye", GetAlgaePhotoEye()); 
     
     frc::SmartDashboard::PutBoolean("Coral", IsCoralReady()); 
+
+    frc::SmartDashboard::PutNumber("Pivot Encoder", GetPivotAngle());
 }
 
 // --- CLAW ---
@@ -116,12 +117,17 @@ double Claw::GetPivotPower()
 
 void Claw::SetPivotAngle(double angle)
 {
-    m_pivot.Set(angle);
+    m_pivotPID.SetReference(angle, rev::spark::SparkMax::ControlType::kMAXMotionPositionControl);
 }
 
 double Claw::GetPivotAngle()
 {
-    return m_pivot.Get();
+    return m_algaePivotEncoder.GetPosition();
+}
+
+void Claw::ZeroEncoder()
+{
+    m_algaePivotEncoder.SetPosition(0.0);
 }
 
 float Claw::GetPivotCurrent()

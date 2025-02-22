@@ -37,6 +37,9 @@ Elevator::Elevator()
   if (!status.IsOK()) {
     std::cout << "Could not configure device. Error: " << status.GetName() << std::endl;
   }
+
+
+
 }
 void Elevator::ElevatorSimulationInit() 
 {
@@ -91,6 +94,16 @@ void Elevator::SetElevatorPower(double power)
 void Elevator::SetElevatorPosition(float position)
 {
   //m_elevatorMotor.SetControl(m_mmElevator);
+}
+
+void Elevator::SetElevatorCoast()
+{
+  m_elevatorMotor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Coast);
+}
+
+void Elevator::SetElvevatorBrake()
+{
+  m_elevatorMotor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 }
 
 double Elevator::GetElevatorPosition()

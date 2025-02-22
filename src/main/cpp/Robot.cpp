@@ -14,6 +14,8 @@
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "photon/PhotonPoseEstimator.h"
 
+RobotContainer robotcontainer; // <--- global variable
+
 Robot::Robot() {
   // DANGEROUS MAKE SURE CODE DOESN'T BLOCK!!!
   frc::SetCurrentThreadPriority(true, 15);
@@ -67,7 +69,7 @@ void Robot::DisabledPeriodic() {
 void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() {
-  m_autonomousCommand = m_container.GetAutonomousCommand();
+  m_autonomousCommand = robotcontainer.GetAutonomousCommand();
 
   if (m_autonomousCommand != nullptr) {
     m_autonomousCommand->Schedule();

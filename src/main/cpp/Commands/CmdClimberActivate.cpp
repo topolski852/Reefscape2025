@@ -20,7 +20,7 @@ CmdClimberActivate::CmdClimberActivate(double power)
 void CmdClimberActivate::Initialize() 
 {
   std::cout << "Starting CmdClimberActivated" << std::endl; //Lets us know the command has started
-
+  currentState = stateClimber::RunClimberFull;
   // if(m_timer.Get() <= units::second_t(0.0))
   // {
   //   m_timer.Reset(); //Resets the timer
@@ -45,47 +45,39 @@ void CmdClimberActivate::Execute()
   //   }
   // }
 
-  // robotcontainer.m_climber.SetClimbPower(0);
+  //robotcontainer.m_climber.SetClimbPower(0);
 
-  // switch(currentState)
-  // {
-  //   case stateClimber::RunClimberFull:
-  //     robotcontainer.m_climber.SetClimbPower(m_power);
-  //     currentState = stateClimber::Sensor1;
-  //     break;
+  switch(currentState)
+  {
+    case stateClimber::RunClimberFull:
+      robotcontainer.m_climber.SetClimbPower(m_power);
+      currentState = stateClimber::Sensor1;
+      std::cout << "RunClimberFull" << std::endl;
+      break;
     
-  //   case stateClimber::Sensor1:
-  //     if(robotcontainer.m_climber.GetClimberBeamBreak())
-  //     {
-  //       currentState = stateClimber::RunClimberActivate;
-  //     }
-  //     break;
+    case stateClimber::Sensor1:
+      std::cout << "Sensor1" << std::endl;
+      if(robotcontainer.m_climber.GetClimberBeamBreak() == false)
+      {
+        currentState = stateClimber::StopMotor;
+        std::cout << "Sensor Off" << std::endl;
+      }
+      break;
 
-  //   case stateClimber::RunClimberActivate:
+    case stateClimber::StopMotor:
+      robotcontainer.m_climber.SetClimbPower(0);
+      currentState = stateClimber::EndState;
+      std::cout << "StopMotor" << std::endl;
+      break;
+
+    case stateClimber::EndState:
+      break;
+  }
+
+  // if(robotcontainer.m_climber.GetClimberBeamBreak())
+  //   {
   //     robotcontainer.m_climber.SetClimbPower(0.2);
-  //     currentState = stateClimber::NotDetected;
-  //     break;
-      
-  //   case stateClimber::NotDetected:
-  //     if (!robotcontainer.m_climber.GetClimberBeamBreak())
-  //     {
-  //       currentState = stateClimber::StopMotor;
-  //     }
-  //     break;
-
-  //   case stateClimber::StopMotor:
-  //     robotcontainer.m_climber.SetClimbPower(0);
-  //     currentState = stateClimber::EndState;
-  //     break;
-
-  //   case stateClimber::EndState:
-  //     break;
-  // }
-
-  if(!robotcontainer.m_climber.GetClimberBeamBreak())
-    {
-      robotcontainer.m_climber.SetClimbPower(0.5);
-    }
+  //   }
 }
 
 

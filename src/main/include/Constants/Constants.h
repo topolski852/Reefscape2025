@@ -25,26 +25,26 @@ inline const frc::AprilTagFieldLayout TAG_LAYOUT =
 
 
 //**********CLIMB CONSTANTS **********//
-#define CLIMBER_CAN_ID         1       
-#define CLIMBER_BEAM_BREAK_ID  9
+#define CLIMBER_CAN_ID         17       
+#define CLIMBER_BEAM_BREAK_ID  1
 
 //********** ClAW CONSTANTS **********//
 
-#define CLAW_PHOTO_EYE_FIRST   2
-#define CLAW_CAN_ID            4
-#define ALGAE_PHOTO_EYE        8
+#define CLAW_PHOTO_EYE_FIRST   7
+#define CLAW_CAN_ID            24
+#define ALGAE_PHOTO_EYE        3
 
 //Pivot
-#define PIVOT_CAN_ID           5
+#define PIVOT_CAN_ID           25
 
 #define PIVOT_HOME_POSITION    0
 #define PIVOT_TOLERANCE        0.05
-#define PIVOT_MANUAL_POWER    0.5
+#define PIVOT_MANUAL_POWER     0.3
 
 //********** ELEVATOR CONSTANTS **********//
 
-#define ELEVATOR_CAN_ID        6
-#define ELEV_HOME_SENSOR       7
+#define ELEVATOR_CAN_ID        50
+#define ELEV_HOME_SENSOR       9
 
 #define ELEV_PULLY_DIAM 1.25_in
 
@@ -80,4 +80,5 @@ inline const frc::AprilTagFieldLayout TAG_LAYOUT =
 #define ELEV_HOMING_HIGH_SPEED 0.01
 #define ELEV_HOMING_CREEP_SPEED 0.005
 
-#define ELEV_MANUAL_SLOW_POWER 0.1
+#define ELEV_MANUAL_SLOW_POWER 0.4
+#define ELEV_MANUAL_SLOW_DOWN_POWER -0.1

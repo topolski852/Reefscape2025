@@ -42,6 +42,8 @@ class Claw : public frc2::SubsystemBase {
   void SetPivotAngle(double angle);
   double GetPivotAngle();
 
+  void ZeroEncoder();
+
   float GetPivotCurrent();
   float GetPivotTemp();
 
@@ -55,6 +57,9 @@ class Claw : public frc2::SubsystemBase {
   SparkMax  m_pivot{PIVOT_CAN_ID, SparkMax::MotorType::kBrushed};
 
   rev::spark::SparkClosedLoopController m_pivotController = m_pivot.GetClosedLoopController();
+  rev::spark::SparkRelativeEncoder      m_algaePivotEncoder = m_pivot.GetEncoder();
+
+  rev::spark::SparkClosedLoopController m_pivotPID = m_pivot.GetClosedLoopController();
 
   frc::DigitalInput         m_armPhotoeyeFirst  {CLAW_PHOTO_EYE_FIRST};
   frc::DigitalInput         m_algaePhotoEye     {ALGAE_PHOTO_EYE};

@@ -37,12 +37,12 @@ class RobotContainer {
   // str::vision::VisionSystem& GetVision();
 
 
-  frc2::CommandXboxController m_topDriver{1};
+  frc2::CommandXboxController m_topDriver{0};
 
  private:
   void ConfigureBindings();
   
-  frc2::CommandXboxController driverJoystick{0};
+  //frc2::CommandXboxController driverJoystick{0};
 
   // Drive driveSub{};
 

@@ -12,6 +12,8 @@
 #include "Commands/CmdElevatorHome.h"
 #include "Commands/CmdElevatorManualPower.h"
 #include "Commands/CmdAlgaeManualPower.h"
+#include "Commands/CmdPivotZero.h"
+
 #include "Subsystems/Elevator.h"
 #include "Subsystems/Claw.h"
 
@@ -39,7 +41,9 @@ RobotContainer::RobotContainer()
   ConfigureBindings();
 
   m_elevator.SetDefaultCommand(CmdElevatorManualPower(0));
+  m_claw.SetDefaultCommand(CmdAlgaeManualPower(0));
   
+  frc::SmartDashboard::PutData("zero pivot", new CmdPivotZero());
 }
 
 void RobotContainer::ConfigureBindings()
@@ -62,15 +66,16 @@ void RobotContainer::ConfigureBindings()
   //     }));
 
   //Climber
-  m_topDriver.Back().WhileTrue(new CmdClimberActivate(frc::SmartDashboard::PutNumber("Climber Power", 0.5)));
+  m_topDriver.Back().WhileTrue(new CmdClimberActivate(frc::SmartDashboard::PutNumber("Climber Power", 0.35)));
 
   //Coral
   m_topDriver.RightBumper().WhileTrue(new CmdClawOuttake(frc::SmartDashboard::PutNumber("ClawOut Power", -0.9)));
-  m_topDriver.RightTrigger(0.5).WhileTrue(new CmdClawActivate(0.9));
+  m_topDriver.RightTrigger(0.5).WhileTrue(new CmdClawActivate(-1.0));
   
   //Algae
   m_topDriver.LeftBumper().WhileTrue(new CmdAlgaeOuttake(frc::SmartDashboard::PutNumber("AlgaeOut Power", 1)));
   m_topDriver.LeftTrigger(0.5).WhileTrue(new CmdAlgaeIntake(0));
+  m_topDriver.B().WhileTrue(new CmdPivotAngle(frc::SmartDashboard::PutNumber("Algae Angle" , 10)));
 
   // m_topDriver.Y().ToggleOnTrue(new CmdPivotAngle(0.0, 0.0)); //Change Later
   // m_topDriver.Y().ToggleOnFalse(new CmdPivotAngle(0.0, 0.0)); //Change Later
@@ -89,9 +94,14 @@ void RobotContainer::ConfigureBindings()
     m_topDriver.POVLeft().WhileTrue(new CmdElevatorHome());
   }
   //m_topDriver.Back().WhileFalse(new CmdAlgaeManualPower(0));
+
+
 }
 
-frc2::Command* RobotContainer::GetAutonomousCommand() {}
+frc2::Command* RobotContainer::GetAutonomousCommand() 
+{
+  return nullptr;
+}
 
 // void RobotContainer::ConfigureSysIdBinds() {
 //   tuningTable->PutBoolean("SteerPidTuning", false);

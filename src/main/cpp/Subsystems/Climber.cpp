@@ -5,9 +5,15 @@
 
 Climber::Climber()
 {
+    
+    m_isClimberActivated = false;
+}
+
+void Climber::Periodic()
+{
     frc::SmartDashboard::PutBoolean("Climber Activated Status", IsClimberActivated());
     frc::SmartDashboard::PutBoolean("Climber Done", GetClimberBeamBreak());
-    m_isClimberActivated = false;
+    frc::SmartDashboard::PutBoolean("Climber Beam Break", GetClimberBeamBreak());
 }
 
 void Climber::SetClimbPower(double power)

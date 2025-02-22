@@ -3,7 +3,7 @@
 #include <iostream>
 #include "constants/Constants.h"
 
-#define ELEVATOR_DEADBAND_CONSTANT 0.9
+#define ELEVATOR_DEADBAND_CONSTANT 0.3
 
 CmdElevatorManualPower::CmdElevatorManualPower(float power) 
 {
@@ -19,18 +19,21 @@ void CmdElevatorManualPower::Initialize()
 
 void CmdElevatorManualPower::Execute() 
 {
-  if((robotcontainer.m_topDriver.GetLeftY() > ELEVATOR_DEADBAND_CONSTANT && !m_manualElevatorEnabled))
+  if((robotcontainer.m_topDriver.GetLeftY() < -ELEVATOR_DEADBAND_CONSTANT))
   {
-    robotcontainer.m_elevator.SetElevatorPower(-ELEV_MANUAL_SLOW_POWER);
+    robotcontainer.m_elevator.SetElevatorCoast();
+    robotcontainer.m_elevator.SetElevatorPower(-0.25);
     m_manualElevatorEnabled = true;
   }
-  else if(robotcontainer.m_topDriver.GetLeftY() < -ELEVATOR_DEADBAND_CONSTANT)
+  else if(robotcontainer.m_topDriver.GetLeftY() > ELEVATOR_DEADBAND_CONSTANT)
   {
-    robotcontainer.m_elevator.SetElevatorPower(ELEV_MANUAL_SLOW_POWER);
+    robotcontainer.m_elevator.SetElevatorCoast();
+    robotcontainer.m_elevator.SetElevatorPower(0.1);
     m_manualElevatorEnabled = true;
   }
   else if(m_manualElevatorEnabled)
   {
+    robotcontainer.m_elevator.SetElvevatorBrake();
     robotcontainer.m_elevator.SetElevatorPower(0);
     m_manualElevatorEnabled = false;
   }

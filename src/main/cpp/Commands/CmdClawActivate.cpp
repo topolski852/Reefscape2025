@@ -40,7 +40,7 @@ void CmdClawActivate::Execute()
       break;
 
     case ClawState::RunClawCreep:
-      robotcontainer.m_claw.SetClawPower(0.2);
+      robotcontainer.m_claw.SetClawPower(-0.35);
       currentState = ClawState::NotDetected;
       break;
 

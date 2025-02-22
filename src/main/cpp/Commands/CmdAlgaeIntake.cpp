@@ -44,15 +44,15 @@ bool CmdAlgaeIntake::IsFinished()
   const units::second_t timeout = units::second_t(2.0);
   if(robotcontainer.m_claw.GetAlgaePhotoEye())
   {
-    robotcontainer.m_claw.SetAlgaePower(-0.2);
+    //robotcontainer.m_claw.SetAlgaePower(-0.2);
     std::cout << "Creep Power" << std::endl;
-    return false;
-  }
-  else if(m_timer.Get() >= timeout && !robotcontainer.m_claw.GetAlgaePhotoEye())
-  {
-    std::cout << "End Command" << std::endl;
     return true;
   }
+  // else if(m_timer.Get() >= timeout && !robotcontainer.m_claw.GetAlgaePhotoEye())
+  // {
+  //   std::cout << "End Command" << std::endl;
+  //   return true;
+  // }
   else 
   {
     return false;
