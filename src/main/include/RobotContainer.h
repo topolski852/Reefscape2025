@@ -33,40 +33,40 @@ class RobotContainer {
   Claw    m_claw;
   Elevator m_elevator;
 
-  // Drive& GetDrive();
-  // str::vision::VisionSystem& GetVision();
+  Drive& GetDrive();
+  str::vision::VisionSystem& GetVision();
 
 
-  frc2::CommandXboxController m_topDriver{0};
+  frc2::CommandXboxController m_topDriver{1};
 
  private:
   void ConfigureBindings();
   
-  //frc2::CommandXboxController driverJoystick{0};
+  frc2::CommandXboxController driverJoystick{0};
 
-  // Drive driveSub{};
+   Drive driveSub{};
 
   bool SmartDashHoming;
 
-    // str::vision::VisionSystem vision{
-    //   [this](const frc::Pose2d& pose, units::second_t time,
-    //          const Eigen::Vector3d& stdDevs) {
-    //     driveSub.AddVisionMeasurement(pose, time, stdDevs);
-    //   },
-    //   [this](const frc::Pose2d& pose, units::second_t time,
-    //          const Eigen::Vector3d& stdDevs) {
-    //     driveSub.AddSingleTagVisionMeasurement(pose, time, stdDevs);
-    //   }};
+    str::vision::VisionSystem vision{
+      [this](const frc::Pose2d& pose, units::second_t time,
+             const Eigen::Vector3d& stdDevs) {
+        driveSub.AddVisionMeasurement(pose, time, stdDevs);
+      },
+      [this](const frc::Pose2d& pose, units::second_t time,
+             const Eigen::Vector3d& stdDevs) {
+        driveSub.AddSingleTagVisionMeasurement(pose, time, stdDevs);
+      }};
 
-  // std::shared_ptr<nt::NetworkTable> tuningTable{
-  //     nt::NetworkTableInstance::GetDefault().GetTable("Tuning")};
-  // frc2::NetworkButton steerTuneBtn{tuningTable, "SteerPidTuning"};
-  // frc2::NetworkButton driveTuneBtn{tuningTable, "DrivePidTuning"};
-  // frc2::NetworkButton steerSysIdVoltsBtn{tuningTable, "SteerSysIdVolts"};
-  // frc2::NetworkButton steerSysIdTorqueCurrentBtn{tuningTable,
-  //                                                "SteerSysIdTorqueCurrent"};
-  // frc2::NetworkButton driveSysIdBtn{tuningTable, "DriveSysId"};
-  // frc2::NetworkButton wheelRadiusBtn{tuningTable, "WheelRadius"};
+  std::shared_ptr<nt::NetworkTable> tuningTable{
+      nt::NetworkTableInstance::GetDefault().GetTable("Tuning")};
+  frc2::NetworkButton steerTuneBtn{tuningTable, "SteerPidTuning"};
+  frc2::NetworkButton driveTuneBtn{tuningTable, "DrivePidTuning"};
+  frc2::NetworkButton steerSysIdVoltsBtn{tuningTable, "SteerSysIdVolts"};
+  frc2::NetworkButton steerSysIdTorqueCurrentBtn{tuningTable,
+                                                 "SteerSysIdTorqueCurrent"};
+  frc2::NetworkButton driveSysIdBtn{tuningTable, "DriveSysId"};
+  frc2::NetworkButton wheelRadiusBtn{tuningTable, "WheelRadius"};
 
 
 

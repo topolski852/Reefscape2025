@@ -8,9 +8,6 @@
 #include <rev/SparkClosedLoopController.h>
 #include <rev/SparkMax.h>
 
-#include <ctre/phoenix6/CANcoder.hpp>
-
-
 using namespace rev::spark;
 
 class Claw : public frc2::SubsystemBase {
@@ -36,19 +33,23 @@ class Claw : public frc2::SubsystemBase {
   float GetAlgaeTemp();
 
   bool GetAlgaePhotoEye();
-  void SetPivotPower(double power);
-  double GetPivotPower();
 
-  void SetPivotAngle(double angle);
-  double GetPivotAngle();
+ // --- ALGAE PIVOT ---
+  void SetPosition(double position);
+  void   SetPower(double power);
 
-  void ZeroEncoder();
+  double GetPosition();
+  
+  void ZeroEncoder(void);
 
   float GetPivotCurrent();
   float GetPivotTemp();
 
-  void SetPivotHold(float position);
-
+  bool IsBallLoaded() const;
+  void SetBallLoaded(bool loaded);
+  
+  bool m_ballLoaded = false;
+  
   bool isCoralReady;
   
  private:
@@ -56,13 +57,11 @@ class Claw : public frc2::SubsystemBase {
 
   SparkMax  m_pivot{PIVOT_CAN_ID, SparkMax::MotorType::kBrushed};
 
-  rev::spark::SparkClosedLoopController m_pivotController = m_pivot.GetClosedLoopController();
-  rev::spark::SparkRelativeEncoder      m_algaePivotEncoder = m_pivot.GetEncoder();
-
+  rev::spark::SparkRelativeEncoder m_pivotEncoder = m_pivot.GetEncoder();
   rev::spark::SparkClosedLoopController m_pivotPID = m_pivot.GetClosedLoopController();
 
   frc::DigitalInput         m_armPhotoeyeFirst  {CLAW_PHOTO_EYE_FIRST};
   frc::DigitalInput         m_algaePhotoEye     {ALGAE_PHOTO_EYE};
 
-
+  
 };

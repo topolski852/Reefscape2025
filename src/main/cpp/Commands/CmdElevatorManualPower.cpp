@@ -46,6 +46,17 @@ void CmdElevatorManualPower::End(bool interrupted)
 
 bool CmdElevatorManualPower::IsFinished()
 {
+  // if(m_manualElevatorEnabled)
+  // {
+  //   robotcontainer.m_elevator.SetElvevatorBrake();
+  //   robotcontainer.m_elevator.SetElevatorPower(0);
+  //   m_manualElevatorEnabled = false;
+  //   return true;
+  // }
+  // else
+  // {
+  //   return false;
+  // }
   return false;
 }
 

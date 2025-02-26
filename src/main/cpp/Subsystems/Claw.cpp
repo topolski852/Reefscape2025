@@ -39,9 +39,8 @@ Claw::Claw()
      SparkMax::PersistMode::kPersistParameters);
 
 
-    frc::SmartDashboard::PutNumber("Pivot Current", GetPivotCurrent());
-    frc::SmartDashboard::PutNumber("Pivot Temp", GetPivotTemp());
-
+    frc::SmartDashboard::PutNumber("Pivot Current", GetAlgaeCurrent());
+    frc::SmartDashboard::PutNumber("Pivot Temp", GetAlgaeTemp());
 
 }
 
@@ -54,7 +53,7 @@ void Claw::Periodic()
     
     frc::SmartDashboard::PutBoolean("Coral", IsCoralReady()); 
 
-    frc::SmartDashboard::PutNumber("Pivot Encoder", GetPivotAngle());
+    frc::SmartDashboard::PutNumber("Pivot Encoder", GetPosition());
 }
 
 // --- CLAW ---
@@ -105,42 +104,30 @@ void Claw::SetAlgaePower(double power)
 
 // --- ALGAE PIVOT ---
 
-void Claw::SetPivotPower(double power)
-{
+  double Claw::GetPosition(void)
+  {
+    return m_pivotEncoder.GetPosition();
+  }
+  void Claw::SetPosition(double position)
+  {
+    m_pivotPID.SetReference( position, rev::spark::SparkMax::ControlType::kMAXMotionPositionControl );  //MaxMotion
+  }
+  void Claw::SetPower(double power)
+  {
     m_pivot.Set(power);
+  }
+
+ void Claw::ZeroEncoder(void)
+ {
+    m_pivotEncoder.SetPosition(0.0);
+ }
+
+ bool Claw::IsBallLoaded() const 
+{
+  return m_ballLoaded;
 }
 
-double Claw::GetPivotPower()
+void Claw::SetBallLoaded(bool loaded)
 {
-    return m_pivot.Get();
-}
-
-void Claw::SetPivotAngle(double angle)
-{
-    m_pivotPID.SetReference(angle, rev::spark::SparkMax::ControlType::kMAXMotionPositionControl);
-}
-
-double Claw::GetPivotAngle()
-{
-    return m_algaePivotEncoder.GetPosition();
-}
-
-void Claw::ZeroEncoder()
-{
-    m_algaePivotEncoder.SetPosition(0.0);
-}
-
-float Claw::GetPivotCurrent()
-{
-    return m_pivot.GetOutputCurrent();
-}
-
-float Claw::GetPivotTemp()
-{
-    return m_pivot.GetMotorTemperature();
-}
-
-void Claw::SetPivotHold(float position)
-{
-     m_pivotController.SetReference(position, rev::spark::SparkLowLevel::ControlType::kPosition);
+    m_ballLoaded = loaded;
 }

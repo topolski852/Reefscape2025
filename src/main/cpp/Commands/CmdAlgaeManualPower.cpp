@@ -21,17 +21,17 @@ void CmdAlgaeManualPower::Execute()
 {
   if((robotcontainer.m_topDriver.GetRightY() > ALGAE_DEADBAND_CONSTANT && !m_manualAlgaeEnabled))
   {
-    robotcontainer.m_claw.SetPivotPower(-PIVOT_MANUAL_POWER);
+    robotcontainer.m_claw.SetPower(-PIVOT_MANUAL_POWER);
     m_manualAlgaeEnabled = true;
   }
   else if(robotcontainer.m_topDriver.GetRightY() < -ALGAE_DEADBAND_CONSTANT)
   {
-    robotcontainer.m_claw.SetPivotPower(PIVOT_MANUAL_POWER);
+    robotcontainer.m_claw.SetPower(PIVOT_MANUAL_POWER);
     m_manualAlgaeEnabled = true;
   }
   else if(m_manualAlgaeEnabled)
   {
-    robotcontainer.m_claw.SetPivotPower(0);
+    robotcontainer.m_claw.SetPower(0);
     m_manualAlgaeEnabled = false;
   }
 }

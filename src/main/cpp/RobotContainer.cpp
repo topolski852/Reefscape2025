@@ -7,7 +7,7 @@
 #include "commands/CmdClawOuttake.h"
 #include "commands/CmdAlgaeOuttake.h"
 #include "commands/CmdAlgaeIntake.h"
-#include "commands/CmdPivotAngle.h"
+#include "commands/CmdAlgaeSetPosition.h"
 #include "Commands/CmdElevatorPosition.h"
 #include "Commands/CmdElevatorHome.h"
 #include "Commands/CmdElevatorManualPower.h"
@@ -33,7 +33,7 @@
 #include "frc/filter/Debouncer.h"
 #include "frc2/command/sysid/SysIdRoutine.h"
 
-
+#include "str/DriverstationUtils.h"
 
 
 RobotContainer::RobotContainer() 
@@ -49,21 +49,21 @@ RobotContainer::RobotContainer()
 void RobotContainer::ConfigureBindings()
 {
 
-  // driveSub.SetDefaultCommand(driveSub.DriveTeleop(
-  //     [this] {
-  //       return str::NegateIfRed(
-  //           frc::ApplyDeadband<double>(-driverJoystick.GetLeftY(), .1) *
-  //           consts::swerve::physical::PHY_CHAR.MaxLinearSpeed());
-  //     },
-  //     [this] {
-  //       return str::NegateIfRed(
-  //           frc::ApplyDeadband<double>(-driverJoystick.GetLeftX(), .1) *
-  //           consts::swerve::physical::PHY_CHAR.MaxLinearSpeed());
-  //     },
-  //     [this] {
-  //       return frc::ApplyDeadband<double>(-driverJoystick.GetRightX(), .1) *
-  //              consts::swerve::physical::MAX_ROT_SPEED;
-  //     }));
+  driveSub.SetDefaultCommand(driveSub.DriveTeleop(
+      [this] {
+        return str::NegateIfRed(
+            frc::ApplyDeadband<double>(-driverJoystick.GetLeftY(), .1) *
+            consts::swerve::physical::PHY_CHAR.MaxLinearSpeed());
+      },
+      [this] {
+        return str::NegateIfRed(
+            frc::ApplyDeadband<double>(-driverJoystick.GetLeftX(), .1) *
+            consts::swerve::physical::PHY_CHAR.MaxLinearSpeed());
+      },
+      [this] {
+        return frc::ApplyDeadband<double>(-driverJoystick.GetRightX(), .1) *
+               consts::swerve::physical::MAX_ROT_SPEED;
+      }));
 
   //Climber
   m_topDriver.Back().WhileTrue(new CmdClimberActivate(frc::SmartDashboard::PutNumber("Climber Power", 0.35)));
@@ -75,7 +75,7 @@ void RobotContainer::ConfigureBindings()
   //Algae
   m_topDriver.LeftBumper().WhileTrue(new CmdAlgaeOuttake(frc::SmartDashboard::PutNumber("AlgaeOut Power", 1)));
   m_topDriver.LeftTrigger(0.5).WhileTrue(new CmdAlgaeIntake(0));
-  m_topDriver.B().WhileTrue(new CmdPivotAngle(frc::SmartDashboard::PutNumber("Algae Angle" , 10)));
+  m_topDriver.B().WhileTrue(new CmdAlgaeSetPosition(15));
 
   // m_topDriver.Y().ToggleOnTrue(new CmdPivotAngle(0.0, 0.0)); //Change Later
   // m_topDriver.Y().ToggleOnFalse(new CmdPivotAngle(0.0, 0.0)); //Change Later

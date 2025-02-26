@@ -15,9 +15,9 @@ namespace consts::swerve {
 inline constexpr units::hertz_t ODOM_UPDATE_RATE = 250_Hz;
 
 namespace can_ids {
-inline constexpr int FL_DRIVE = 2;
-inline constexpr int FL_STEER = 3;
-inline constexpr int FL_ENC = 4;
+inline constexpr int FL_DRIVE = 4;
+inline constexpr int FL_STEER = 2;
+inline constexpr int FL_ENC = 3;
 
 inline constexpr int FR_DRIVE = 5;
 inline constexpr int FR_STEER = 6;
@@ -45,15 +45,14 @@ namespace physical {
 inline constexpr frc::DCMotor DRIVE_MOTOR = frc::DCMotor::KrakenX60FOC(1);
 inline constexpr frc::DCMotor STEER_MOTOR = frc::DCMotor::KrakenX60FOC(1);
 
-inline constexpr units::scalar_t STEER_GEARING = (50.0 / 14.0) * (60.0 / 10.0);
+inline constexpr units::scalar_t STEER_GEARING = 21.428571428571427;
 // L2
-inline constexpr units::scalar_t DRIVE_GEARING =
-    (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
-inline constexpr units::scalar_t COUPLING_RATIO = (50.0 / 14.0);
-inline constexpr units::meter_t WHEEL_RADIUS = 1.9154_in;
+inline constexpr units::scalar_t DRIVE_GEARING =  6.122448979591837;
+inline constexpr units::scalar_t COUPLING_RATIO = 3.5714285714285716;
+inline constexpr units::meter_t WHEEL_RADIUS = 1.95_in;
 
-inline constexpr units::meter_t WHEELBASE_WIDTH = 22.75_in;
-inline constexpr units::meter_t WHEELBASE_LENGTH = 22.75_in;
+inline constexpr units::meter_t WHEELBASE_WIDTH = 23.75_in;
+inline constexpr units::meter_t WHEELBASE_LENGTH = 23.75_in;
 
 inline const units::meter_t DRIVEBASE_RADIUS{
     units::math::hypot(WHEELBASE_WIDTH / 2, WHEELBASE_LENGTH / 2)};
@@ -73,7 +72,7 @@ inline constexpr units::meter_t DRIVEBASE_WIDTH = 29_in;
 inline constexpr units::meter_t DRIVEBASE_LENGTH = 29_in;
 
 // 3/4 in plywood + 2.5 in diameter pool noodles + 1/8 slop
-inline constexpr units::meter_t BUMPER_THICKNESS = .75_in + 2.5_in + .125_in;
+inline constexpr units::meter_t BUMPER_THICKNESS = 2.75_in;
 
 // Total size including bumpers
 inline constexpr units::meter_t TOTAL_WIDTH =
@@ -81,24 +80,24 @@ inline constexpr units::meter_t TOTAL_WIDTH =
 inline constexpr units::meter_t TOTAL_LENGTH =
     DRIVEBASE_LENGTH + (2 * BUMPER_THICKNESS);
 
-inline constexpr units::degree_t IMU_MOUNT_ROLL = -0.3409_deg;
-inline constexpr units::degree_t IMU_MOUNT_PITCH = 0.3149_deg;
-inline constexpr units::degree_t IMU_MOUNT_YAW = 0.0131_deg;
+inline constexpr units::degree_t IMU_MOUNT_ROLL = 0_deg;
+inline constexpr units::degree_t IMU_MOUNT_PITCH = 0_deg;
+inline constexpr units::degree_t IMU_MOUNT_YAW = 0_deg;
 
-inline constexpr units::turn_t FL_ENC_OFFSET = 0.296875_tr;
-inline constexpr units::turn_t FR_ENC_OFFSET = -0.046387_tr;
-inline constexpr units::turn_t BL_ENC_OFFSET = -0.396973_tr;
-inline constexpr units::turn_t BR_ENC_OFFSET = 0.124512_tr;
+inline constexpr units::turn_t FL_ENC_OFFSET = 0.314697265625_tr;
+inline constexpr units::turn_t FR_ENC_OFFSET = -0.29443359375_tr;
+inline constexpr units::turn_t BL_ENC_OFFSET = 0.2177734375_tr;
+inline constexpr units::turn_t BR_ENC_OFFSET = 0.00244140625_tr;
 
 inline constexpr bool FL_STEER_INVERT = true;
 inline constexpr bool FR_STEER_INVERT = true;
-inline constexpr bool BL_STEER_INVERT = true;
+inline constexpr bool BL_STEER_INVERT = false;
 inline constexpr bool BR_STEER_INVERT = true;
 
-inline constexpr bool FL_DRIVE_INVERT = false;
-inline constexpr bool FR_DRIVE_INVERT = true;
+inline constexpr bool FL_DRIVE_INVERT = true;
+inline constexpr bool FR_DRIVE_INVERT = false;
 inline constexpr bool BL_DRIVE_INVERT = false;
-inline constexpr bool BR_DRIVE_INVERT = true;
+inline constexpr bool BR_DRIVE_INVERT = false;
 
 inline const str::swerve::ModuleConstants FL{"FL",
                                              consts::swerve::can_ids::FL_DRIVE,
@@ -154,21 +153,21 @@ namespace gains {
 inline const str::gains::radial::VoltRadialGainsHolder STEER{
     consts::swerve::physical::STEER_MOTOR.freeSpeed /
         consts::swerve::physical::STEER_GEARING,
-    str::gains::radial::turn_volt_ka_unit_t{0.085024},
-    str::gains::radial::turn_volt_kv_unit_t{2.5028},
-    str::gains::radial::turn_volt_ka_unit_t{0.085024},
-    str::gains::radial::turn_volt_kv_unit_t{2.5028},
-    0.21176_V,
-    str::gains::radial::turn_volt_kp_unit_t{45.01},
+    str::gains::radial::turn_volt_ka_unit_t{0},
+    str::gains::radial::turn_volt_kv_unit_t{0}, //WAS 2.66
+    str::gains::radial::turn_volt_ka_unit_t{0},
+    str::gains::radial::turn_volt_kv_unit_t{0},
+     0.21176_V,
+    str::gains::radial::turn_volt_kp_unit_t{1},
     str::gains::radial::turn_volt_ki_unit_t{0},
-    str::gains::radial::turn_volt_kd_unit_t{2.6793},
+    str::gains::radial::turn_volt_kd_unit_t{0.1},
 };
 
 inline const str::swerve::DriveGains DRIVE{
-    str::gains::radial::turn_amp_ka_unit_t{0.070827},
-    str::gains::radial::turn_amp_kv_unit_t{0},
-    10.051_A,
-    str::gains::radial::turn_amp_kp_unit_t{3.596},
+    str::gains::radial::turn_amp_ka_unit_t{0},
+    str::gains::radial::turn_amp_kv_unit_t{0.124},
+    10_A,
+    str::gains::radial::turn_amp_kp_unit_t{0.1},
     str::gains::radial::turn_amp_ki_unit_t{0},
     str::gains::radial::turn_amp_kd_unit_t{0},
 };
