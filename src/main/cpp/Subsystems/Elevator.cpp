@@ -8,6 +8,7 @@
 
 Elevator::Elevator() 
 {
+
    ctre::phoenix6::configs::TalonFXConfiguration cfg{};
 
   /* Configure gear ratio */
@@ -22,12 +23,12 @@ Elevator::Elevator()
   mm.MotionMagicJerk = 100_tr_per_s_cu;
 
   ctre::phoenix6::configs::Slot0Configs &slot0 = cfg.Slot0;
-  slot0.kS = 0.25; // Add 0.25 V output to overcome static friction
-  slot0.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
+  slot0.kS = 0.4; // Add 0.25 V output to overcome static friction
+  slot0.kV = 4.0; // A velocity target of 1 rps results in 0.12 V output
   slot0.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-  slot0.kP = 60; // A position error of 0.2 rotations results in 12 V output
-  slot0.kI = 0; // No output for integrated error
-  slot0.kD = 0.5; // A velocity error of 1 rps results in 0.5 V output
+  slot0.kP = 25.0; // A position error of 0.2 rotations results in 12 V output
+  slot0.kI = 0.0; // No output for integrated error
+  slot0.kD = 1.0; // A velocity error of 1 rps results in 0.5 V output
 
   ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
   for (int i = 0; i < 5; ++i) {
@@ -62,6 +63,8 @@ void Elevator::Periodic()
   frc::SmartDashboard::PutBoolean("Elevator Load", elevatorLoad);
   frc::SmartDashboard::PutBoolean("Elevator Low Algae", elevatorLowAlgae);
   frc::SmartDashboard::PutBoolean("Elevator High Algae", elevatorHighAlgae);
+
+
 }
 
 
@@ -200,6 +203,16 @@ void Elevator::SetTargetPosition (int position)
     
 }
 
+bool Elevator::AtSetpoint()
+{
+  temp_High = targetPosition + ELEV_TOLERANCE;
+  temp_Low = targetPosition - ELEV_TOLERANCE;
+
+  if (temp_Low < m_elevatorMotor.GetPosition().GetValue() && m_elevatorMotor.GetPosition().GetValue() > temp_High)
+  {
+    return true;
+  } else { return false; }
+}
 
 void Elevator::ResetEncoderValue()
 {

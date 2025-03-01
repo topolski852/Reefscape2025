@@ -13,6 +13,7 @@
 #include "Commands/CmdElevatorManualPower.h"
 #include "Commands/CmdAlgaeManualPower.h"
 #include "Commands/CmdPivotZero.h"
+#include "Commands/CmdElevatorToPosition.h"
 
 #include "Subsystems/Elevator.h"
 #include "Subsystems/Claw.h"
@@ -49,32 +50,45 @@ RobotContainer::RobotContainer()
 void RobotContainer::ConfigureBindings()
 {
 
-  driveSub.SetDefaultCommand(driveSub.DriveTeleop(
-      [this] {
-        return str::NegateIfRed(
-            frc::ApplyDeadband<double>(-driverJoystick.GetLeftY(), .1) *
-            consts::swerve::physical::PHY_CHAR.MaxLinearSpeed());
-      },
-      [this] {
-        return str::NegateIfRed(
-            frc::ApplyDeadband<double>(-driverJoystick.GetLeftX(), .1) *
-            consts::swerve::physical::PHY_CHAR.MaxLinearSpeed());
-      },
-      [this] {
-        return frc::ApplyDeadband<double>(-driverJoystick.GetRightX(), .1) *
-               consts::swerve::physical::MAX_ROT_SPEED;
-      }));
+      // Note that X is defined as forward according to WPILib convention,
+    // and Y is defined as to the left according to WPILib convention.
+    drivetrain.SetDefaultCommand(
+        // Drivetrain will execute this command periodically
+        drivetrain.ApplyRequest([this]() -> auto&& {
+            return drive.WithVelocityX(-joystick.GetLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                .WithVelocityY(-joystick.GetLeftX() * MaxSpeed) // Drive left with negative X (left)
+                .WithRotationalRate(-joystick.GetRightX() * MaxAngularRate); // Drive counterclockwise with negative X (left)
+        })
+    );
+
+    joystick.A().WhileTrue(drivetrain.ApplyRequest([this]() -> auto&& { return brake; }));
+    joystick.B().WhileTrue(drivetrain.ApplyRequest([this]() -> auto&& {
+        return point.WithModuleDirection(frc::Rotation2d{-joystick.GetLeftY(), -joystick.GetLeftX()});
+    }));
+
+    // Run SysId routines when holding back/start and X/Y.
+    // Note that each routine should be run exactly once in a single log.
+    // (joystick.Back() && joystick.Y()).WhileTrue(drivetrain.SysIdDynamic(frc2::sysid::Direction::kForward));
+    // (joystick.Back() && joystick.X()).WhileTrue(drivetrain.SysIdDynamic(frc2::sysid::Direction::kReverse));
+    // (joystick.Start() && joystick.Y()).WhileTrue(drivetrain.SysIdQuasistatic(frc2::sysid::Direction::kForward));
+    // (joystick.Start() && joystick.X()).WhileTrue(drivetrain.SysIdQuasistatic(frc2::sysid::Direction::kReverse));
+
+    // // reset the field-centric heading on left bumper press
+    joystick.A().OnTrue(drivetrain.RunOnce([this] { drivetrain.SeedFieldCentric(); }));
+
+    drivetrain.RegisterTelemetry([this](auto const &state) { logger.Telemeterize(state); });
+    
 
   //Climber
   m_topDriver.Back().WhileTrue(new CmdClimberActivate(frc::SmartDashboard::PutNumber("Climber Power", 0.35)));
 
   //Coral
-  m_topDriver.RightBumper().WhileTrue(new CmdClawOuttake(frc::SmartDashboard::PutNumber("ClawOut Power", -0.9)));
-  m_topDriver.RightTrigger(0.5).WhileTrue(new CmdClawActivate(-1.0));
+  //m_topDriver.RightBumper().WhileTrue(new CmdClawOuttake(frc::SmartDashboard::PutNumber("ClawOut Power", -0.9)));
+  joystick.RightBumper().OnTrue(new CmdClawActivate(-1.0));
   
   //Algae
-  m_topDriver.LeftBumper().WhileTrue(new CmdAlgaeOuttake(frc::SmartDashboard::PutNumber("AlgaeOut Power", 1)));
-  m_topDriver.LeftTrigger(0.5).WhileTrue(new CmdAlgaeIntake(0));
+  //m_topDriver.LeftBumper().WhileTrue(new CmdAlgaeOuttake(frc::SmartDashboard::PutNumber("AlgaeOut Power", 1)));
+  joystick.LeftBumper().OnTrue(new CmdAlgaeIntake(0));
   m_topDriver.B().WhileTrue(new CmdAlgaeSetPosition(15));
 
   // m_topDriver.Y().ToggleOnTrue(new CmdPivotAngle(0.0, 0.0)); //Change Later
@@ -82,16 +96,16 @@ void RobotContainer::ConfigureBindings()
 
   if(!m_topDriver.Y().Get())
   {
-    m_topDriver.POVDown().WhileTrue(new CmdElevatorPosition(1));
-    m_topDriver.POVRight().WhileTrue(new CmdElevatorPosition(2));
-    m_topDriver.POVLeft().WhileTrue(new CmdElevatorPosition(3));
-    m_topDriver.POVUp().WhileTrue(new CmdElevatorPosition(4));
+    m_topDriver.POVDown().OnTrue(new CmdElevatorToPosition(1));
+    m_topDriver.POVRight().OnTrue(new CmdElevatorToPosition(2));
+    m_topDriver.POVLeft().OnTrue(new CmdElevatorToPosition(3));
+    m_topDriver.POVUp().OnTrue(new CmdElevatorToPosition(4));
   }
   else
   {
-    m_topDriver.POVUp().WhileTrue(new CmdElevatorPosition(5));
-    m_topDriver.POVDown().WhileTrue(new CmdElevatorPosition(6));
-    m_topDriver.POVLeft().WhileTrue(new CmdElevatorHome());
+    m_topDriver.POVUp().OnTrue(new CmdElevatorToPosition(5));
+    m_topDriver.POVDown().OnTrue(new CmdElevatorToPosition(6));
+    m_topDriver.POVLeft().OnTrue(new CmdElevatorHome());
   }
   //m_topDriver.Back().WhileFalse(new CmdAlgaeManualPower(0));
 

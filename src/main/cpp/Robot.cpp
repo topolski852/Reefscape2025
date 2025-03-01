@@ -9,7 +9,6 @@
 
 #include <ctre/phoenix6/SignalLogger.hpp>
 
-#include "constants/SwerveConstants.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "photon/PhotonPoseEstimator.h"
@@ -17,16 +16,16 @@
 RobotContainer robotcontainer; // <--- global variable
 
 Robot::Robot() {
-  // DANGEROUS MAKE SURE CODE DOESN'T BLOCK!!!
-  frc::SetCurrentThreadPriority(true, 15);
-  ctre::phoenix6::SignalLogger::EnableAutoLogging(true);
-  ctre::phoenix6::SignalLogger::Start();
-  frc::DataLogManager::Start();
-  frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
-  // AddPeriodic([this] { m_container.GetDrive().UpdateOdom(); },
-  //             1 / consts::swerve::ODOM_UPDATE_RATE, 2_ms);
-  wpi::WebServer::GetInstance().Start(5800,
-                                      frc::filesystem::GetDeployDirectory());
+  // // DANGEROUS MAKE SURE CODE DOESN'T BLOCK!!!
+  // frc::SetCurrentThreadPriority(true, 15);
+  // ctre::phoenix6::SignalLogger::EnableAutoLogging(true);
+  // ctre::phoenix6::SignalLogger::Start();
+  // frc::DataLogManager::Start();
+  // frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
+  // // AddPeriodic([this] { m_container.GetDrive().UpdateOdom(); },
+  // //             1 / consts::swerve::ODOM_UPDATE_RATE, 2_ms);
+  // wpi::WebServer::GetInstance().Start(5800,
+  //                                     frc::filesystem::GetDeployDirectory());
   pdp.ClearStickyFaults();
 }
 

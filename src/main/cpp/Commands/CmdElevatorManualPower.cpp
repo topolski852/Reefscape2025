@@ -19,7 +19,7 @@ void CmdElevatorManualPower::Initialize()
 
 void CmdElevatorManualPower::Execute() 
 {
-  if((robotcontainer.m_topDriver.GetLeftY() < -ELEVATOR_DEADBAND_CONSTANT))
+    if((robotcontainer.m_topDriver.GetLeftY() < -ELEVATOR_DEADBAND_CONSTANT))
   {
     robotcontainer.m_elevator.SetElevatorCoast();
     robotcontainer.m_elevator.SetElevatorPower(-0.25);
@@ -34,7 +34,7 @@ void CmdElevatorManualPower::Execute()
   else if(m_manualElevatorEnabled)
   {
     robotcontainer.m_elevator.SetElvevatorBrake();
-    robotcontainer.m_elevator.SetElevatorPower(0);
+    robotcontainer.m_elevator.SetElevatorPower(-0.01);
     m_manualElevatorEnabled = false;
   }
 }

@@ -2,6 +2,8 @@
 #include "Robot.h"
 #include <iostream>
 
+#include "Constants/Constants.h"
+
 CmdElevatorPosition::CmdElevatorPosition(float position) 
 {
   AddRequirements(&robotcontainer.m_elevator);
@@ -16,7 +18,6 @@ void CmdElevatorPosition::Initialize()
 void CmdElevatorPosition::Execute() 
 {
   robotcontainer.m_elevator.SetTargetPosition(m_position);
-  std::cout << "Executing Elevator Position" << std::endl;
 }
 
 void CmdElevatorPosition::End(bool interrupted) 
@@ -27,14 +28,20 @@ void CmdElevatorPosition::End(bool interrupted)
 
 bool CmdElevatorPosition::IsFinished()
 {
-  if((robotcontainer.m_elevator.GetElevatorPosition() + ELEV_TOLERANCE) > m_position && (robotcontainer.m_elevator.GetElevatorPosition() - ELEV_TOLERANCE) < m_position)
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
+  // if((robotcontainer.m_elevator.GetElevatorPosition() + ELEV_TOLERANCE) > m_position && (robotcontainer.m_elevator.GetElevatorPosition() - ELEV_TOLERANCE) < m_position)
+  // if(robotcontainer.m_elevator.GetElevatorPosition() <= -1)
+  // {
+    // robotcontainer.m_elevator.SetElvevatorBrake();
+    // robotcontainer.m_elevator.SetElevatorPower(-0.025);
+  //   return true;
+  // }
+  // else
+  // {
+    //return false;
+  //}
+
+  if(robotcontainer.m_elevator.AtSetpoint()) {return true;}
+  else {return false;}
 }
 
 
